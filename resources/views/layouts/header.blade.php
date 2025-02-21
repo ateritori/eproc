@@ -4,11 +4,20 @@
         {{ Auth::user()->name }}
     </button>
     <ul class="dropdown-menu dropdown-menu-end">
-        <li><a class="dropdown-item" href="{{ route('profil') }}">Akun</a></li>
+        <!-- Menu Akun -->
+        <li>
+            <a href="{{ route('user.edit', ['id' => Auth::user()->id]) }}" class="dropdown-item">
+                <i class="bi bi-person"></i> Akun
+            </a>
+        </li>
+
+        <!-- Logout -->
         <li>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
-                <button type="submit" class="dropdown-item">Logout</button>
+                <button type="submit" class="dropdown-item">
+                    <i class="bi bi-box-arrow-right"></i> Logout
+                </button>
             </form>
         </li>
     </ul>

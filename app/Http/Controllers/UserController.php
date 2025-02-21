@@ -15,6 +15,7 @@ class UserController extends Controller
     public function dashboard(Request $request)
     {
         $query = Lelang::query();
+        $user = Auth::user(); // Ambil data user yang sedang login
 
         // Filter pencarian
         if ($request->has('search') && !empty($request->search)) {
