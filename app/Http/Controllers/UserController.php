@@ -4,73 +4,59 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Lelang; // Pastikan model Lelang di-import
 use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+use App\Models\Vendor;
 
 class UserController extends Controller
 {
-    // Menampilkan halaman dashboard dengan data lelang
+    // 🔹 Menampilkan halaman dashboard
     public function dashboard(Request $request)
     {
-        $query = Lelang::query();
-
-        // Filter berdasarkan pencarian
-        if ($request->has('search') && !empty($request->search)) {
-            $search = $request->search;
-
-            $query->where('jenis_pekerjaan', 'LIKE', "%$search%")
-                  ->orWhere('pagu', 'LIKE', "%$search%")
-                  ->orWhere('tahun', 'LIKE', "%$search%");
-        }
-
-        // Ambil data lelang dengan pagination
-        $lelang = $query->paginate(10);
-
-        // Kembalikan tampilan dashboard vendor dengan data lelang
-        return view('vendor.dashboard', compact('lelang'));
+        return view('user.dashboard');
     }
 
-    // Menampilkan halaman profil pengguna
+    // 🔹 Menampilkan profil pengguna & vendor
     public function profil()
     {
-        // Ambil data pengguna yang sedang login
         $user = Auth::user();
-        return view('vendor.profil', compact('user'));
+        $vendor = $user->vendor; // Ambil data vendor
+
+        return view('user.profil', compact('user', 'vendor'));
     }
 
-    // Halaman untuk mengedit akun pengguna
+    // 🔹 Menampilkan halaman edit akun user
     public function editAccount()
     {
-        // Ambil data akun pengguna yang sedang login
         $user = Auth::user();
-        return view('vendor.edit_account', compact('user')); // Perbaikan tampilan menjadi 'vendor.edit_account'
+        return view('user.edit_account', compact('user'));
     }
 
-    // Untuk mengupdate akun setelah form disubmit
+    // 🔹 Mengupdate akun user setelah form disubmit
     public function updateAccount(Request $request)
     {
-        // Validasi data yang dikirimkan dari form
+        // Validasi data input
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . Auth::id(), // Email tidak boleh duplikat selain milik pengguna saat ini
+            'email' => 'required|email|max:255|unique:users,email,' . Auth::id(), // Email unik
+            'password' => 'nullable|min:6|confirmed',
         ]);
 
-        // Ambil pengguna yang sedang login
+        // Ambil data user yang login
         $user = Auth::user();
 
-        // Update data pengguna
+        // Update data user
         $user->name = $request->input('name');
         $user->email = $request->input('email');
 
-        // Jika ada password yang diubah, update passwordnya
+        // Jika password diisi, update password
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
 
-        // Simpan perubahan ke database
+        // Simpan perubahan
         $user->save();
 
-        // Redirect kembali ke halaman profil dengan pesan sukses
-        return redirect()->route('profile')->with('success', 'Akun berhasil diperbarui');
+        return redirect()->route('profil')->with('success', 'Akun berhasil diperbarui.');
     }
 }

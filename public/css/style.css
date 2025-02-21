@@ -1,0 +1,191 @@
+:root {
+    --sidebar-bg: #343a40;
+    --sidebar-hover: #495057;
+    --profil-bg: #f9f9f9;
+    --profil-border: #ddd;
+    --pekerjaan-border: #ccc;
+}
+
+/* Global */
+body {
+    display: flex;
+    background-color: #f8f9fa;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: var(--sidebar-bg);
+    color: white;
+    padding-top: 20px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sidebar img {
+    width: 70px;
+    margin-bottom: 10px;
+}
+
+.sidebar h4 {
+    margin-bottom: 20px;
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    padding: 12px 20px;
+    width: 100%;
+    text-align: left;
+    transition: background 0.3s;
+}
+
+.sidebar a:hover {
+    background: var(--sidebar-hover);
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    padding: 20px;
+}
+
+.header {
+    background: #007bff;
+    color: white;
+    padding: 15px 20px;
+    font-size: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+}
+
+/* TABLE PROFIL */
+/* Styling khusus untuk tabel profil */
+.table-profil {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    border-collapse: collapse;
+}
+
+/* Header teks untuk profil */
+.table-profil td {
+    padding: 12px 15px;
+    border: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+/* Kolom pertama (label) dibuat lebih tebal */
+.table-profil td:first-child {
+    width: 30%;
+    font-weight: bold;
+    background: #f8f9fa;
+}
+
+/* Kolom kedua (separator `:`) */
+.table-profil .separator {
+    width: 5%;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Kolom ketiga (isi data) */
+.table-profil td:last-child {
+    width: 65%;
+}
+
+/* Hover effect */
+.table-profil tr:hover {
+    background: #f1f3f5;
+}
+
+/* TABLE PEKERJAAN */
+.table-pekerjaan {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Header tabel dengan warna gelap */
+.table-pekerjaan thead th {
+    background: #343a40 !important; /* Warna dark */
+    color: white;
+    text-align: center;
+    padding: 12px;
+}
+
+/* Border dan padding pada sel */
+.table-pekerjaan td,
+.table-pekerjaan th {
+    border: 1px solid #dee2e6;
+    padding: 12px;
+}
+
+/* Menyesuaikan posisi teks di dalam tabel */
+.table-pekerjaan .text-left { text-align: left; }
+.table-pekerjaan .text-center { text-align: center; }
+.table-pekerjaan .text-right { text-align: right; }
+
+/* Hover effect pada baris */
+.table-pekerjaan tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Tombol dalam tabel */
+.table-pekerjaan .btn {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+/* PAGINATION */
+/* Wrapper untuk pagination */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+/* Styling pagination */
+.pagination {
+    display: flex;
+    gap: 5px;
+    list-style: none;
+    padding: 0;
+}
+
+/* Link pagination */
+.pagination .page-item .page-link {
+    border-radius: 5px;
+    padding: 8px 12px;
+    color: #007bff;
+    border: 1px solid #ddd;
+    text-decoration: none;
+}
+
+/* Aktif halaman */
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border: 1px solid #007bff;
+}
+
+/* Disabled halaman */
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    border-color: #ddd;
+}
+
+/* Hover efek */
+.pagination .page-item .page-link:hover {
+    background-color: #e9ecef;
+}

@@ -1,40 +1,50 @@
 <?php
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LelangController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VendorController;
 
-// Route untuk halaman utama
+// 🔹 Halaman utama (Daftar Lelang)
 Route::get('/', [LelangController::class, 'index'])->name('home');
 
-// Route untuk submit RFQ, hanya bisa diakses setelah login
-Route::get('/rfq/{id}', [LelangController::class, 'submitRFQ'])->name('rfq.submit')->middleware('auth');
+// 🔹 Route untuk submit RFQ (hanya bisa diakses setelah login)
+Route::middleware('auth')->group(function () {
+    Route::get('/rfq/{id}', [LelangController::class, 'submitRFQ'])->name('rfq.submit');
+});
 
-// Route untuk login dan register
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+// 🔹 Authentication Routes
+Route::controller(AuthController::class)->group(function () {
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'login');
+    Route::get('/register', 'showRegisterForm')->name('register');
+    Route::post('/register', 'register');
+});
 
-// Route untuk logout
+// 🔹 Logout Route
 Route::post('/logout', function () {
     Auth::logout();
     return redirect()->route('home');
 })->name('logout');
 
-// Grup route yang memerlukan autentikasi
+// 🔹 Grup route yang membutuhkan autentikasi
 Route::middleware(['auth'])->group(function () {
-
-    // Dashboard dan profil
+    // 🔹 Dashboard User
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', [UserController::class, 'profil'])->name('profile')->middleware('auth'); // Ganti profile dengan profil
-    
-    // Route untuk halaman pengeditan akun
-    Route::get('/dashboard/ubah-akun', [UserController::class, 'editAccount'])->name('edit_account');
-    Route::put('/dashboard/ubah-akun', [UserController::class, 'updateAccount'])->name('update_account');
 
-    // Route untuk halaman pengeditan profil perusahaan
-    Route::get('/dashboard/ubah-profil', [UserController::class, 'editProfile'])->name('edit_profile');
+    // 🔹 Profil Pengguna
+    Route::get('/profil', [UserController::class, 'profil'])->name('profil');
+
+  // 🔹 Route untuk Edit User
+Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+
+// 🔹 Grup route yang membutuhkan autentikasi
+Route::middleware(['auth'])->group(function () {
+    // 🔹 Edit Profil Vendor
+    Route::get('/dashboard/ubah-vendor', [VendorController::class, 'edit'])->name('edit_vendor');
+    Route::put('/dashboard/ubah-vendor', [VendorController::class, 'update'])->name('update_vendor');
+});
 });
