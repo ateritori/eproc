@@ -40,38 +40,44 @@ class UserController extends Controller
         return view('user.profil', compact('user', 'vendor'));
     }
 
-    // 🔹 Menampilkan halaman edit akun user
-    public function editAccount()
-    {
-        $user = Auth::user();
-        return view('user.edit_account', compact('user'));
-    }
+    public function edit($id)
+{
+    // Ambil data user berdasarkan ID
+    $user = User::findOrFail($id);
 
-    // 🔹 Mengupdate akun user setelah form disubmit
-    public function updateAccount(Request $request)
-    {
-        // Validasi data input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . Auth::id(), // Email unik
-            'password' => 'nullable|min:6|confirmed',
-        ]);
+    // Kirim data user ke view edit
+    return view('user.edit', compact('user'));
+}
 
-        // Ambil data user yang login
-        $user = Auth::user();
+public function update(Request $request, $id)
+{
+    // Validasi input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users,email,' . $id,
+        'password' => 'nullable|min:6|confirmed',
+    ]);
+
+    try {
+        // Cari user berdasarkan ID
+        $user = User::findOrFail($id);
 
         // Update data user
         $user->name = $request->input('name');
         $user->email = $request->input('email');
 
-        // Jika password diisi, update password
+        // Jika password diisi, update passwordnya
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
 
-        // Simpan perubahan
         $user->save();
 
+        // Notifikasi sukses
         return redirect()->route('profil')->with('success', 'Akun berhasil diperbarui.');
+    } catch (\Exception $e) {
+        // Notifikasi error
+        return redirect()->route('profil')->with('error', 'Terjadi kesalahan saat memperbarui akun.');
     }
+}
 }

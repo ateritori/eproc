@@ -37,9 +37,9 @@ Route::middleware(['auth'])->group(function () {
     // 🔹 Profil Pengguna
     Route::get('/profil', [UserController::class, 'profil'])->name('profil');
 
-  // 🔹 Route untuk Edit User
+  // 🔹 Edit Akun User
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
-Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+Route::put('/user/{id}/update', [UserController::class, 'update'])->name('user.update');
 
 // 🔹 Grup route yang membutuhkan autentikasi
 Route::middleware(['auth'])->group(function () {
