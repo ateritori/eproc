@@ -58,26 +58,70 @@ public function update(Request $request, $id)
         'password' => 'nullable|min:6|confirmed',
     ]);
 
-    try {
-        // Cari user berdasarkan ID
-        $user = User::findOrFail($id);
+    // Cari user berdasarkan ID
+    $user = User::findOrFail($id);
 
-        // Update data user
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+    // Cek apakah email berubah
+    $emailChanged = $user->email !== $request->input('email');
 
-        // Jika password diisi, update passwordnya
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->input('password'));
-        }
+    // Update data user
+    $user->name = $request->input('name');
+    $user->email = $request->input('email');
 
-        $user->save();
-
-        // Notifikasi sukses
-        return redirect()->route('profil')->with('success', 'Akun berhasil diperbarui.');
-    } catch (\Exception $e) {
-        // Notifikasi error
-        return redirect()->route('profil')->with('error', 'Terjadi kesalahan saat memperbarui akun.');
+    // Jika password diisi, update passwordnya
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->input('password'));
     }
+
+    $user->save();
+
+    // Jika email berubah, logout user dan redirect ke halaman login
+    if ($emailChanged) {
+        Auth::logout();
+        return redirect()->route('login')->with('success', 'Email berhasil diperbarui. Silakan login kembali.');
+    }
+
+    // Redirect ke profil jika tidak ada perubahan email
+    return redirect()->route('profil')->with('success', 'Akun berhasil diperbarui');
+}
+
+public function editVendor($id_vendor)
+{
+    $vendor = Vendor::where('id_vendor', $id_vendor)->firstOrFail();
+    return view('user.edit_vendor', compact('vendor'));
+}
+
+public function updateVendor(Request $request, $id_vendor)
+{
+    // Validasi input
+    $request->validate([
+        'pemilik' => 'required|string|max:255',
+        'alamat' => 'required|string|max:255',
+        'telepon' => 'required|string|max:15',
+        'pic' => 'required|string|max:255',
+        'hp_pic' => 'required|string|max:15',
+        'bidang' => 'required|string|max:255',
+        'berdiri' => 'required|integer|min:1900|max:' . date('Y'),
+        'legalitas' => 'nullable|string|max:255',
+        'total_proyek' => 'nullable|integer|min:0',
+    ]);
+
+    // Cari vendor berdasarkan ID
+    $vendor = Vendor::where('id_vendor', $id_vendor)->firstOrFail();
+
+    // Update data vendor
+    $vendor->update([
+        'pemilik' => $request->input('pemilik'),
+        'alamat' => $request->input('alamat'),
+        'telepon' => $request->input('telepon'),
+        'pic' => $request->input('pic'),
+        'hp_pic' => $request->input('hp_pic'),
+        'bidang' => $request->input('bidang'),
+        'berdiri' => $request->input('berdiri'),
+        'legalitas' => $request->input('legalitas'),
+        'total_proyek' => $request->input('total_proyek'),
+    ]);
+
+    return redirect()->route('profil')->with('success', 'Profil vendor berhasil diperbarui');
 }
 }

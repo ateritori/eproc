@@ -41,10 +41,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
 Route::put('/user/{id}/update', [UserController::class, 'update'])->name('user.update');
 
-// 🔹 Grup route yang membutuhkan autentikasi
-Route::middleware(['auth'])->group(function () {
-    // 🔹 Edit Profil Vendor
-    Route::get('/dashboard/ubah-vendor', [VendorController::class, 'edit'])->name('edit_vendor');
-    Route::put('/dashboard/ubah-vendor', [VendorController::class, 'update'])->name('update_vendor');
-});
+// 🔹 Edit Profil Vendor
+Route::get('/dashboard/vendor/edit/{id_vendor}', [UserController::class, 'editVendor'])->name('edit_vendor');
+Route::put('/dashboard/vendor/update/{id_vendor}', [UserController::class, 'updateVendor'])->name('update_vendor');
 });

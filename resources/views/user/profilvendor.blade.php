@@ -30,7 +30,8 @@
                 <td></td>
                 <td></td>
                 <td>
-                    <a href="{{ route('edit_vendor') }}" class="btn btn-warning">
+                    <a href="{{ route('edit_vendor', ['id_vendor' => $user->vendor->id_vendor]) }}"
+                        class="btn btn-warning">
                         <i class="bi bi-pencil"></i> Edit Vendor
                     </a>
                 </td>
