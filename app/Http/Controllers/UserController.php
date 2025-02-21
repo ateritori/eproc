@@ -7,13 +7,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\Lelang;
 
 class UserController extends Controller
 {
     // 🔹 Menampilkan halaman dashboard
     public function dashboard(Request $request)
     {
-        return view('user.dashboard');
+        $query = Lelang::query();
+
+        // Filter pencarian
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where('jenis_pekerjaan', 'LIKE', "%$search%")
+                  ->orWhere('pagu', 'LIKE', "%$search%")
+                  ->orWhere('tahun', 'LIKE', "%$search%");
+        }
+
+        // Ambil data lelang dengan pagination
+        $lelang = $query->paginate(10);
+
+        // Kirim ke view
+        return view('user.dashboard', compact('lelang'));
     }
 
     // 🔹 Menampilkan profil pengguna & vendor
