@@ -125,4 +125,29 @@ public function updateVendor(Request $request, $id_vendor)
 
     return redirect()->route('profil')->with('success', 'Profil vendor berhasil diperbarui');
 }
+
+public function createPenawaran($id)
+{
+    $lelang = Lelang::findOrFail($id);
+    return view('user.submit_penawaran', compact('lelang'));
+}
+
+public function storePenawaran(Request $request, $id)
+{
+    $request->validate([
+        'harga_penawaran' => 'required|numeric|min:1000',
+        'file_penawaran' => 'required|mimes:pdf|max:2048',
+    ]);
+
+    $filePath = $request->file('file_penawaran')->store('penawaran', 'public');
+
+    Penawaran::create([
+        'lelang_id' => $id,
+        'user_id' => Auth::id(),
+        'harga_penawaran' => $request->harga_penawaran,
+        'file_penawaran' => $filePath,
+    ]);
+
+    return redirect()->route('dashboard')->with('success', 'Penawaran berhasil dikirim.');
+}
 }

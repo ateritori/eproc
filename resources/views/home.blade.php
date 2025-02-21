@@ -125,9 +125,8 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ Auth::check() ? route('rfq.submit', ['id' => $item->id]) : '#' }}"
-                                        class="btn btn-primary btn-sm submit-rfq"
-                                        data-login="{{ Auth::check() ? 'yes' : 'no' }}">
+                                    <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
+                                        class="btn btn-primary btn-sm" data-login="{{ Auth::check() ? 'yes' : 'no' }}">
                                         <i class="bi bi-send"></i>
                                     </a>
                                 </td>

@@ -44,4 +44,7 @@ Route::put('/user/{id}/update', [UserController::class, 'update'])->name('user.u
 // 🔹 Edit Profil Vendor
 Route::get('/dashboard/vendor/edit/{id_vendor}', [UserController::class, 'editVendor'])->name('edit_vendor');
 Route::put('/dashboard/vendor/update/{id_vendor}', [UserController::class, 'updateVendor'])->name('update_vendor');
+
+Route::get('/penawaran/{id}/create', [UserController::class, 'createPenawaran'])->name('penawaran.create');
+Route::post('/penawaran/{id}', [UserController::class, 'storePenawaran'])->name('penawaran.store');
 });

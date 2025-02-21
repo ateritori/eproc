@@ -28,7 +28,9 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        <a href="#" class="btn btn-primary btn-sm"><i class="bi bi-send"></i></a>
+                        <a href="{{ route('penawaran.create', ['id' => $item->id]) }}" class="btn btn-primary btn-sm">
+                            <i class="bi bi-send"></i> Kirim Penawaran
+                        </a>
                     </td>
                 </tr>
             @endforeach

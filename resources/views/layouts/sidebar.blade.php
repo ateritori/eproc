@@ -1,5 +1,5 @@
 <div class="sidebar">
-    <h4>Dashboard</h4>
+    <h4>Menu Vendor</h4>
     <a href="{{ route('dashboard') }}">🏠 Dashboard</a>
     <a href="{{ route('profil') }}">👤 Profil</a>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
