@@ -58,10 +58,18 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
+
+                            <!-- Menu Akun -->
+                            <li><a class="dropdown-item" href="{{ route('user.edit', ['id' => Auth::user()->id]) }}">
+                                    <i class="bi bi-person"></i> Akun
+                                </a></li>
+
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
-                                    <button type="submit" class="dropdown-item">Logout</button>
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-box-arrow-right"></i> Logout
+                                    </button>
                                 </form>
                             </li>
                         </ul>
