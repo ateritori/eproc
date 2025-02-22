@@ -58,12 +58,9 @@
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
-
-                            <!-- Menu Akun -->
                             <li><a class="dropdown-item" href="{{ route('user.edit', ['id' => Auth::user()->id]) }}">
                                     <i class="bi bi-person"></i> Akun
                                 </a></li>
-
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -107,6 +104,11 @@
                     </thead>
                     <tbody>
                         @foreach ($lelang as $index => $item)
+                            @php
+                                // Cek apakah user sudah mengajukan penawaran
+                                $penawaranAda =
+                                    Auth::check() && $item->penawarans->where('user_id', Auth::id())->isNotEmpty();
+                            @endphp
                             <tr>
                                 <td class="text-center">
                                     {{ $loop->iteration + ($lelang->currentPage() - 1) * $lelang->perPage() }}
@@ -125,10 +127,19 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
-                                        class="btn btn-primary btn-sm" data-login="{{ Auth::check() ? 'yes' : 'no' }}">
-                                        <i class="bi bi-send"></i>
-                                    </a>
+                                    @if ($penawaranAda)
+                                        <!-- Jika sudah mengajukan penawaran, tampilkan ikon tidak aktif -->
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            <i class="bi bi-check-circle-fill"></i>
+                                        </button>
+                                    @else
+                                        <!-- Jika belum mengajukan, tampilkan ikon aktif -->
+                                        <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
+                                            class="btn btn-primary btn-sm submit-rfq"
+                                            data-login="{{ Auth::check() ? 'yes' : 'no' }}">
+                                            <i class="bi bi-send-fill"></i>
+                                        </a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
@@ -151,7 +162,7 @@
                 if (!isLoggedIn) {
                     event.preventDefault();
                     alert("Silakan login untuk mengikuti lelang.");
-                    window.location.href = "{{ route('login') }}";
+                    window.location.href = "{{ route('login') }}?error=unauthorized";
                 }
             });
         });

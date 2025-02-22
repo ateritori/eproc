@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\Lelang;
+use App\Models\Penawaran;
 
 class UserController extends Controller
 {
@@ -126,28 +127,32 @@ public function updateVendor(Request $request, $id_vendor)
     return redirect()->route('profil')->with('success', 'Profil vendor berhasil diperbarui');
 }
 
-public function createPenawaran($id)
+public function create($id)
 {
     $lelang = Lelang::findOrFail($id);
     return view('user.submit_penawaran', compact('lelang'));
 }
 
-public function storePenawaran(Request $request, $id)
+public function store(Request $request, $id) // $id harus ada
 {
     $request->validate([
         'harga_penawaran' => 'required|numeric|min:1000',
-        'file_penawaran' => 'required|mimes:pdf|max:2048',
+        'file_dokumen' => 'required|file|mimes:pdf,doc,docx|max:2048',
     ]);
 
-    $filePath = $request->file('file_penawaran')->store('penawaran', 'public');
+    // Simpan file
+    $path = $request->file('file_dokumen')->store('penawaran_files', 'public');
 
+    // Simpan ke database
     Penawaran::create([
-        'lelang_id' => $id,
+        'lelang_id' => $id, // Gunakan ID dari URL
         'user_id' => Auth::id(),
         'harga_penawaran' => $request->harga_penawaran,
-        'file_penawaran' => $filePath,
+        'file_dokumen' => $path,
+        'status' => 'pending'
     ]);
 
-    return redirect()->route('dashboard')->with('success', 'Penawaran berhasil dikirim.');
+    return redirect()->route('dashboard')->with('success', 'Penawaran berhasil dikirim!');
 }
+
 }

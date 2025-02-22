@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LelangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\PenawaranController;
 
 // 🔹 Halaman utama (Daftar Lelang)
 Route::get('/', [LelangController::class, 'index'])->name('home');
@@ -45,6 +46,9 @@ Route::put('/user/{id}/update', [UserController::class, 'update'])->name('user.u
 Route::get('/dashboard/vendor/edit/{id_vendor}', [UserController::class, 'editVendor'])->name('edit_vendor');
 Route::put('/dashboard/vendor/update/{id_vendor}', [UserController::class, 'updateVendor'])->name('update_vendor');
 
-Route::get('/penawaran/{id}/create', [UserController::class, 'createPenawaran'])->name('penawaran.create');
-Route::post('/penawaran/{id}', [UserController::class, 'storePenawaran'])->name('penawaran.store');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/penawaran/create/{id}', [UserController::class, 'create'])->name('penawaran.create');
+    Route::post('/penawaran/{id}', [UserController::class, 'store'])->name('penawaran.store'); // Pastikan {id} ada di sini
+});
+
 });

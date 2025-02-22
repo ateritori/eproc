@@ -14,6 +14,12 @@ class Lelang extends Model
         'pagu',
         'rincian',
         'file',
-        'tahun' // Tambahkan tahun
+        'tahun'
     ];
+
+    // Relasi ke model Penawaran (One-to-Many)
+    public function penawarans()
+    {
+        return $this->hasMany(Penawaran::class, 'lelang_id', 'id');
+    }
 }

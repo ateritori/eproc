@@ -12,6 +12,9 @@
         </thead>
         <tbody>
             @foreach ($lelang as $index => $item)
+                @php
+                    $penawaranAda = $item->penawarans->where('user_id', Auth::id())->isNotEmpty();
+                @endphp
                 <tr>
                     <td class="text-center">{{ $loop->iteration + ($lelang->currentPage() - 1) * $lelang->perPage() }}
                     </td>
@@ -28,9 +31,16 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        <a href="{{ route('penawaran.create', ['id' => $item->id]) }}" class="btn btn-primary btn-sm">
-                            <i class="bi bi-send"></i> Kirim Penawaran
-                        </a>
+                        @if ($penawaranAda)
+                            <button class="btn btn-secondary btn-sm" disabled>
+                                <i class="bi bi-check-circle"></i> Sudah Diajukan
+                            </button>
+                        @else
+                            <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
+                                class="btn btn-primary btn-sm">
+                                <i class="bi bi-send"></i> Kirim Penawaran
+                            </a>
+                        @endif
                     </td>
                 </tr>
             @endforeach
