@@ -12,25 +12,27 @@ use App\Models\Penawaran;
 
 class UserController extends Controller
 {
-    // 🔹 Menampilkan halaman dashboard
     public function dashboard(Request $request)
     {
+        $user = Auth::user(); // Ambil data user (bisa null jika belum login)
+
+        // Query dasar
         $query = Lelang::query();
-        $user = Auth::user(); // Ambil data user yang sedang login
 
-        // Filter pencarian
-        if ($request->has('search') && !empty($request->search)) {
+        // Filter pencarian jika ada input search
+        $query->when($request->filled('search'), function ($q) use ($request) {
             $search = $request->search;
-            $query->where('jenis_pekerjaan', 'LIKE', "%$search%")
-                  ->orWhere('pagu', 'LIKE', "%$search%")
-                  ->orWhere('tahun', 'LIKE', "%$search%");
-        }
+            $q->where(function ($subQuery) use ($search) {
+                $subQuery->where('jenis_pekerjaan', 'LIKE', "%$search%")
+                         ->orWhere('pagu', 'LIKE', "%$search%")
+                         ->orWhere('tahun', 'LIKE', "%$search%");
+            });
+        });
 
-        // Ambil data lelang dengan pagination
-        $lelang = $query->paginate(10);
+        // Ambil data dengan pagination dan urutkan dari tahun terbaru
+        $lelang = $query->orderBy('tahun', 'desc')->paginate(10);
 
-        // Kirim ke view
-        return view('user.dashboard', compact('lelang'));
+        return view('user.dashboard', compact('lelang', 'user'));
     }
 
     // 🔹 Menampilkan profil pengguna & vendor

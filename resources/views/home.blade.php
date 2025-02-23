@@ -81,75 +81,76 @@
     <div class="container content">
         <div class="sub-header border rounded bg-light d-flex justify-content-between align-items-center">
             <h2 class="mb-0">Daftar Pekerjaan yang Dilelang</h2>
-            <form method="GET" action="{{ route('dashboard') }}" class="d-flex">
+            <form method="GET" action="{{ route('home') }}" class="d-flex">
                 <input type="text" name="search" class="form-control me-2" placeholder="Cari pekerjaan..."
                     value="{{ request('search') }}" style="width: 250px;">
                 <button type="submit" class="btn btn-primary">Cari</button>
             </form>
         </div>
+    </div>
 
-        <div class="table-container">
-            <div class="table-responsive">
-                <table class="table table-bordered text-center">
-                    <thead class="table-dark">
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th class="text-center">No</th>
+                        <th class="text-start">Jenis Pekerjaan</th>
+                        <th class="text-start">Deskripsi</th>
+                        <th class="text-end">Pagu Lelang (Rp.)</th>
+                        <th class="text-center">Tahun</th>
+                        <th class="text-center">File</th>
+                        <th class="text-center">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($lelang as $index => $item)
+                        @php
+                            // Cek apakah user sudah mengajukan penawaran
+                            $penawaranAda =
+                                Auth::check() && $item->penawarans->where('user_id', Auth::id())->isNotEmpty();
+                        @endphp
                         <tr>
-                            <th class="text-center">No</th>
-                            <th class="text-start">Jenis Pekerjaan</th>
-                            <th class="text-start">Deskripsi</th>
-                            <th class="text-end">Pagu Lelang (Rp.)</th>
-                            <th class="text-center">Tahun</th>
-                            <th class="text-center">File</th>
-                            <th class="text-center">Aksi</th>
+                            <td class="text-center">
+                                {{ $loop->iteration + ($lelang->currentPage() - 1) * $lelang->perPage() }}
+                            </td>
+                            <td class="text-start">{{ $item->jenis_pekerjaan }}</td>
+                            <td class="text-start">{{ $item->rincian }}</td>
+                            <td class="text-end">{{ number_format($item->pagu, 0, ',', '.') }}</td>
+                            <td class="text-center">{{ $item->tahun }}</td>
+                            <td class="text-center">
+                                @if ($item->file)
+                                    <a href="{{ asset('storage/' . $item->file) }}" class="btn btn-link">
+                                        <i class="bi bi-download"></i>
+                                    </a>
+                                @else
+                                    <i class="bi bi-file-earmark-x text-muted"></i>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                @if ($penawaranAda)
+                                    <!-- Jika sudah mengajukan penawaran, tampilkan ikon tidak aktif -->
+                                    <button class="btn btn-secondary btn-sm" disabled>
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </button>
+                                @else
+                                    <!-- Jika belum mengajukan, tampilkan ikon aktif -->
+                                    <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
+                                        class="btn btn-primary btn-sm submit-rfq"
+                                        data-login="{{ Auth::check() ? 'yes' : 'no' }}">
+                                        <i class="bi bi-send-fill"></i>
+                                    </a>
+                                @endif
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($lelang as $index => $item)
-                            @php
-                                // Cek apakah user sudah mengajukan penawaran
-                                $penawaranAda =
-                                    Auth::check() && $item->penawarans->where('user_id', Auth::id())->isNotEmpty();
-                            @endphp
-                            <tr>
-                                <td class="text-center">
-                                    {{ $loop->iteration + ($lelang->currentPage() - 1) * $lelang->perPage() }}
-                                </td>
-                                <td class="text-start">{{ $item->jenis_pekerjaan }}</td>
-                                <td class="text-start">{{ $item->rincian }}</td>
-                                <td class="text-end">{{ number_format($item->pagu, 0, ',', '.') }}</td>
-                                <td class="text-center">{{ $item->tahun }}</td>
-                                <td class="text-center">
-                                    @if ($item->file)
-                                        <a href="{{ asset('storage/' . $item->file) }}" class="btn btn-link">
-                                            <i class="bi bi-download"></i>
-                                        </a>
-                                    @else
-                                        <i class="bi bi-file-earmark-x text-muted"></i>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    @if ($penawaranAda)
-                                        <!-- Jika sudah mengajukan penawaran, tampilkan ikon tidak aktif -->
-                                        <button class="btn btn-secondary btn-sm" disabled>
-                                            <i class="bi bi-check-circle-fill"></i>
-                                        </button>
-                                    @else
-                                        <!-- Jika belum mengajukan, tampilkan ikon aktif -->
-                                        <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
-                                            class="btn btn-primary btn-sm submit-rfq"
-                                            data-login="{{ Auth::check() ? 'yes' : 'no' }}">
-                                            <i class="bi bi-send-fill"></i>
-                                        </a>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
-        <div class="d-flex justify-content-center mt-3">
-            {{ $lelang->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
-        </div>
+    </div>
+    <div class="d-flex justify-content-center mt-3">
+        {{ $lelang->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
+    </div>
     </div>
 
 </body>

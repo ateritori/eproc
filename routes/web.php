@@ -5,16 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LelangController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\VendorController;
-use App\Http\Controllers\PenawaranController;
 
 // 🔹 Halaman utama (Daftar Lelang)
 Route::get('/', [LelangController::class, 'index'])->name('home');
-
-// 🔹 Route untuk submit RFQ (hanya bisa diakses setelah login)
-Route::middleware('auth')->group(function () {
-    Route::get('/rfq/{id}', [LelangController::class, 'submitRFQ'])->name('rfq.submit');
-});
 
 // 🔹 Authentication Routes
 Route::controller(AuthController::class)->group(function () {
@@ -22,33 +15,32 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('/login', 'login');
     Route::get('/register', 'showRegisterForm')->name('register');
     Route::post('/register', 'register');
+    Route::post('/logout', 'logout')->name('logout'); // Optimalkan logout ke dalam AuthController
 });
 
-// 🔹 Logout Route
-Route::post('/logout', function () {
-    Auth::logout();
-    return redirect()->route('home');
-})->name('logout');
-
 // 🔹 Grup route yang membutuhkan autentikasi
-Route::middleware(['auth'])->group(function () {
-    // 🔹 Dashboard User
+Route::middleware('auth')->group(function () {
+    // 🔹 Dashboard Vendor
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
 
     // 🔹 Profil Pengguna
     Route::get('/profil', [UserController::class, 'profil'])->name('profil');
 
-  // 🔹 Edit Akun User
-Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
-Route::put('/user/{id}/update', [UserController::class, 'update'])->name('user.update');
+    // 🔹 Edit Akun User
+    Route::prefix('user')->group(function () {
+        Route::get('{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+        Route::put('{id}/update', [UserController::class, 'update'])->name('user.update');
+    });
 
-// 🔹 Edit Profil Vendor
-Route::get('/dashboard/vendor/edit/{id_vendor}', [UserController::class, 'editVendor'])->name('edit_vendor');
-Route::put('/dashboard/vendor/update/{id_vendor}', [UserController::class, 'updateVendor'])->name('update_vendor');
+    // 🔹 Edit Profil Vendor
+    Route::prefix('dashboard/vendor')->group(function () {
+        Route::get('edit/{id_vendor}', [UserController::class, 'editVendor'])->name('edit_vendor');
+        Route::put('update/{id_vendor}', [UserController::class, 'updateVendor'])->name('update_vendor');
+    });
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/penawaran/create/{id}', [UserController::class, 'create'])->name('penawaran.create');
-    Route::post('/penawaran/{id}', [UserController::class, 'store'])->name('penawaran.store'); // Pastikan {id} ada di sini
-});
-
+    // 🔹 Submit Penawaran (hanya user login)
+    Route::prefix('penawaran')->group(function () {
+        Route::get('create/{id}', [UserController::class, 'create'])->name('penawaran.create');
+        Route::post('{id}', [UserController::class, 'store'])->name('penawaran.store');
+    });
 });
