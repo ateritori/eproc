@@ -1,176 +1,140 @@
-<!DOCTYPE html>
-<html lang="id">
+<!doctype html>
+<html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Procurement</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+        integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style2.css">
 
-    <style>
-        header {
-            z-index: 1030;
-        }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Viga" rel="stylesheet">
 
-        .content {
-            margin-top: 100px;
-        }
-
-        .sub-header {
-            max-width: 1200px;
-            margin: 20px auto;
-            padding: 15px;
-        }
-
-        .table-container {
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        .table td.text-start {
-            text-align: left;
-        }
-
-        .table td.text-end {
-            text-align: right;
-        }
-    </style>
+    <title>Pratikum IAAS</title>
 </head>
 
 <body>
 
-    <header class="bg-dark text-white py-3 fixed-top shadow">
-        <div class="container-fluid d-flex align-items-center">
-            <img src="{{ asset('images/kemenhan.png') }}" alt="Logo Kemenhan" width="50" height="50"
-                class="me-2">
-            <h2 class="fw-bold">Sistem Pengadaan Alutsista Pertahanan</h2>
 
-            <div class="ms-auto">
-                @if (Auth::check())
-                    <div class="dropdown">
-                        <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown"
-                            data-bs-toggle="dropdown">
-                            {{ Auth::user()->name }}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{ route('user.edit', ['id' => Auth::user()->id]) }}">
-                                    <i class="bi bi-person"></i> Akun
-                                </a></li>
-                            <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="bi bi-box-arrow-right"></i> Logout
-                                    </button>
-                                </form>
-                            </li>
-                        </ul>
-                    </div>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-outline-light">Login</a>
-                @endif
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">Kelompok 4</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                <div class="navbar-nav ml-auto">
+                    <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-item nav-link" href="https://kaks4.eastasia.cloudapp.azure.com/filemanager"
+                        target="_blank">File Manager</a>
+                    <a class="nav-item nav-link" href="https://kaks4.eastasia.cloudapp.azure.com/phpmyadmin"
+                        target="_blank">PHPMyadmin</a>
+                    <a class="nav-item nav-link" href="https://kaks4.eastasia.cloudapp.azure.com/crud"
+                        target="_blank">CRUD</a>
+                    <a class="nav-item nav-link" href="{{ route('lelang') }}" target="_blank">Eproc</a>
+                </div>
             </div>
         </div>
-    </header>
+    </nav>
+    <!-- akhir Navbar -->
 
-    <div class="container content">
-        <div class="sub-header border rounded bg-light d-flex justify-content-between align-items-center">
-            <h2 class="mb-0">Daftar Pekerjaan yang Dilelang</h2>
-            <form method="GET" action="{{ route('home') }}" class="d-flex">
-                <input type="text" name="search" class="form-control me-2" placeholder="Cari pekerjaan..."
-                    value="{{ request('search') }}" style="width: 250px;">
-                <button type="submit" class="btn btn-primary">Cari</button>
-            </form>
+    <!-- Jumbotron -->
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4"><span>Implementasi IaaS </span> menggunakan <br>Microsoft <span>Azure</span></h1>
+            <a href="#" class="btn btn-info btn-lg tombol">View Our Work</a>
         </div>
     </div>
+    <!-- akhir Jumbotron -->
 
-    <div class="table-container">
-        <div class="table-responsive">
-            <table class="table table-bordered text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th class="text-center">No</th>
-                        <th class="text-start">Jenis Pekerjaan</th>
-                        <th class="text-start">Deskripsi</th>
-                        <th class="text-end">Pagu Lelang (Rp.)</th>
-                        <th class="text-center">Tahun</th>
-                        <th class="text-center">File</th>
-                        <th class="text-center">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($lelang as $index => $item)
-                        @php
-                            // Cek apakah user sudah mengajukan penawaran
-                            $penawaranAda =
-                                Auth::check() && $item->penawarans->where('user_id', Auth::id())->isNotEmpty();
-                        @endphp
-                        <tr>
-                            <td class="text-center">
-                                {{ $loop->iteration + ($lelang->currentPage() - 1) * $lelang->perPage() }}
-                            </td>
-                            <td class="text-start">{{ $item->jenis_pekerjaan }}</td>
-                            <td class="text-start">{{ $item->rincian }}</td>
-                            <td class="text-end">{{ number_format($item->pagu, 0, ',', '.') }}</td>
-                            <td class="text-center">{{ $item->tahun }}</td>
-                            <td class="text-center">
-                                @if ($item->file)
-                                    <a href="{{ asset('storage/' . $item->file) }}" class="btn btn-link">
-                                        <i class="bi bi-download"></i>
-                                    </a>
-                                @else
-                                    <i class="bi bi-file-earmark-x text-muted"></i>
-                                @endif
-                            </td>
-                            <td class="text-center">
-                                @if ($penawaranAda)
-                                    <!-- Jika sudah mengajukan penawaran, tampilkan ikon tidak aktif -->
-                                    <button class="btn btn-secondary btn-sm" disabled>
-                                        <i class="bi bi-check-circle-fill"></i>
-                                    </button>
-                                @else
-                                    <!-- Jika belum mengajukan, tampilkan ikon aktif -->
-                                    <a href="{{ route('penawaran.create', ['id' => $item->id]) }}"
-                                        class="btn btn-primary btn-sm submit-rfq"
-                                        data-login="{{ Auth::check() ? 'yes' : 'no' }}">
-                                        <i class="bi bi-send-fill"></i>
-                                    </a>
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+
+    <!-- container -->
+    <div class="container">
+
+        <!-- info panel -->
+        <div class="row justify-content-center">
+            <div class="col-10 info-panel">
+                <div class="row">
+                    <div class="col-sm">
+                        <img src="/images/employee.png" alt="Employee" class="img-fluid float-left">
+                        <h4>24 Hours</h4>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div class="col-lg">
+                        <img src="/images/hires.png" alt="HiRes" class="img-fluid float-left">
+                        <h4>High-Res</h4>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                    <div class="col-lg">
+                        <img src="/images/security.png" alt="Security" class="img-fluid float-left">
+                        <h4>Security</h4>
+                        <p>Lorem ipsum dolor sit amet.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="d-flex justify-content-center mt-3">
-        {{ $lelang->onEachSide(1)->links('vendor.pagination.bootstrap-5') }}
-    </div>
-    </div>
+        <!-- akhir info panel -->
 
+
+        <!-- Workingspace -->
+        <div class="row workingspace">
+            <div class="col-lg-6">
+                <img src="/images/workingspace.png" alt="Working Space" class="img-fluid">
+            </div>
+            <div class="col-lg-5">
+                <h2>You <span>Work</span> Like at <span>Home</span></h2>
+                <p>Bekerja dengan suasana hati yang lebih asik, menyenangkan
+                    dan mempelajari hal baru setiap harinya.</p>
+                <a href="#" class="btn btn-danger tombol">Gallery</a>
+            </div>
+        </div>
+        <!-- akhir Workingspace -->
+
+
+        <!-- Testimonial -->
+        <section class="testimonial">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <p>"Bekerja dengan suasana hati yang lebih asik dan mempelajari hal baru setiap harinya."</p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 justify-content-center d-flex">
+                    <img src="/images/img1.png" alt="Testimonial 1">
+                    <img src="/images/img2.png" alt="Testimonial 2" class="img-main">
+                    <img src="/images/img3.png" alt="Testimonial 3">
+                </div>
+            </div>
+            <div class="row justify-content-center info-text">
+                <div class="col-lg text-center">
+                    <h5>Sunny Ye</h5>
+                    <p>Designer</p>
+                </div>
+            </div>
+        </section>
+        <!-- akhir Testimonial -->
+
+
+    </div>
+    <!-- akhir container -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+        integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+        integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous">
+    </script>
 </body>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".submit-rfq").forEach(button => {
-            button.addEventListener("click", function(event) {
-                let isLoggedIn = this.getAttribute("data-login") === "yes";
-                if (!isLoggedIn) {
-                    event.preventDefault();
-                    alert("Silakan login untuk mengikuti lelang.");
-                    window.location.href = "{{ route('login') }}?error=unauthorized";
-                }
-            });
-        });
-    });
-</script>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>

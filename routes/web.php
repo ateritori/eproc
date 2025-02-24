@@ -6,8 +6,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LelangController;
 use App\Http\Controllers\UserController;
 
-// 🔹 Halaman utama (Daftar Lelang)
-Route::get('/', [LelangController::class, 'index'])->name('home');
+// 🔹 Halaman utama (Landing Page)
+Route::get('/', [LelangController::class, 'home'])->name('home');
+
+// 🔹 Halaman Daftar Lelang
+Route::get('/lelang', [LelangController::class, 'daftarLelang'])->name('lelang');
 
 // 🔹 Authentication Routes
 Route::controller(AuthController::class)->group(function () {

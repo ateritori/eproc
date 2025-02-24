@@ -7,7 +7,14 @@ use App\Models\Lelang;
 
 class LelangController extends Controller
 {
-    public function index(Request $request)
+    // 🔹 Halaman utama (Landing Page)
+    public function home()
+    {
+        return view('home'); // Tetap menampilkan home.blade.php
+    }
+
+    // 🔹 Halaman Daftar Lelang
+    public function daftarLelang(Request $request)
     {
         $search = trim($request->input('search')); // Hilangkan spasi di awal/akhir
 
@@ -24,6 +31,6 @@ class LelangController extends Controller
             ->paginate(8)
             ->appends(['search' => $search]); // Agar parameter tetap ada saat paginasi
 
-        return view('home', compact('lelang'));
+        return view('lelang', compact('lelang')); // Menampilkan lelang.blade.php
     }
 }

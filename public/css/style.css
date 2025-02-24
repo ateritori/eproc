@@ -4,12 +4,18 @@
     --profil-bg: #f9f9f9;
     --profil-border: #ddd;
     --pekerjaan-border: #ccc;
+    --primary-color: #007bff;
+    --text-light: #acacac;
 }
 
 /* Global */
 body {
     display: flex;
     background-color: #f8f9fa;
+}
+
+h2, h4 {
+    font-weight: bold;
 }
 
 /* Sidebar */
@@ -30,17 +36,12 @@ body {
     margin-bottom: 10px;
 }
 
-.sidebar h4 {
-    margin-bottom: 20px;
-}
-
 .sidebar a {
     color: white;
     text-decoration: none;
     display: block;
     padding: 12px 20px;
     width: 100%;
-    text-align: left;
     transition: background 0.3s;
 }
 
@@ -56,7 +57,7 @@ body {
 }
 
 .header {
-    background: #007bff;
+    background: var(--primary-color);
     color: white;
     padding: 15px 20px;
     font-size: 20px;
@@ -66,96 +67,52 @@ body {
     border-radius: 8px;
 }
 
-/* TABLE PROFIL */
-/* Styling khusus untuk tabel profil */
-.table-profil {
+/* TABLE PROFIL & PEKERJAAN */
+.table-profil, .table-pekerjaan {
     width: 100%;
     background: #ffffff;
     border-radius: 8px;
-    overflow: hidden;
     border-collapse: collapse;
 }
 
-/* Header teks untuk profil */
-.table-profil td {
+.table-profil td, .table-pekerjaan td, .table-pekerjaan th {
     padding: 12px 15px;
     border: 1px solid #dee2e6;
     vertical-align: middle;
 }
 
-/* Kolom pertama (label) dibuat lebih tebal */
-.table-profil td:first-child {
-    width: 30%;
+.table-profil td:first-child, .table-pekerjaan thead th {
     font-weight: bold;
     background: #f8f9fa;
 }
 
-/* Kolom kedua (separator `:`) */
+.table-pekerjaan thead th {
+    background: var(--sidebar-bg) !important;
+    color: white;
+    text-align: center;
+}
+
 .table-profil .separator {
     width: 5%;
     text-align: center;
     font-weight: bold;
 }
 
-/* Kolom ketiga (isi data) */
 .table-profil td:last-child {
     width: 65%;
 }
 
-/* Hover effect */
-.table-profil tr:hover {
+.table-profil tr:hover, .table-pekerjaan tbody tr:hover {
     background: #f1f3f5;
 }
 
-/* TABLE PEKERJAAN */
-.table-pekerjaan {
-    width: 100%;
-    border-collapse: collapse;
-    background: #ffffff;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-/* Header tabel dengan warna gelap */
-.table-pekerjaan thead th {
-    background: #343a40 !important; /* Warna dark */
-    color: white;
-    text-align: center;
-    padding: 12px;
-}
-
-/* Border dan padding pada sel */
-.table-pekerjaan td,
-.table-pekerjaan th {
-    border: 1px solid #dee2e6;
-    padding: 12px;
-}
-
-/* Menyesuaikan posisi teks di dalam tabel */
-.table-pekerjaan .text-left { text-align: left; }
-.table-pekerjaan .text-center { text-align: center; }
-.table-pekerjaan .text-right { text-align: right; }
-
-/* Hover effect pada baris */
-.table-pekerjaan tbody tr:hover {
-    background: #f8f9fa;
-}
-
-/* Tombol dalam tabel */
-.table-pekerjaan .btn {
-    padding: 5px 10px;
-    font-size: 14px;
-}
-
 /* PAGINATION */
-/* Wrapper untuk pagination */
 .pagination-container {
     display: flex;
     justify-content: center;
     margin-top: 15px;
 }
 
-/* Styling pagination */
 .pagination {
     display: flex;
     gap: 5px;
@@ -163,29 +120,25 @@ body {
     padding: 0;
 }
 
-/* Link pagination */
 .pagination .page-item .page-link {
     border-radius: 5px;
     padding: 8px 12px;
-    color: #007bff;
+    color: var(--primary-color);
     border: 1px solid #ddd;
     text-decoration: none;
 }
 
-/* Aktif halaman */
 .pagination .page-item.active .page-link {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
-    border: 1px solid #007bff;
+    border: 1px solid var(--primary-color);
 }
 
-/* Disabled halaman */
 .pagination .page-item.disabled .page-link {
     color: #6c757d;
     border-color: #ddd;
 }
 
-/* Hover efek */
 .pagination .page-item .page-link:hover {
     background-color: #e9ecef;
 }
